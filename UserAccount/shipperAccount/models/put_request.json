@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type" : "object",
+  "required": ["id","firstname","lastname","phone","email"],
+  "properties" : {
+    "id" : {
+      "type" : "string"
+    },
+    "paraName" : {
+      "type" : "string"
+    },
+    "paramValue" : {
+      "type" : "string"
+    }
+  },
+  "title" : "update ShipperAccount",
+  "description" : "Model containing shipper account information"
+}

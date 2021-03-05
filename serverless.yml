@@ -1,0 +1,26 @@
+service: gitlab-example
+provider:
+  name: aws
+  region: ${env:AWS_REGION}
+  runtime: nodejs10.x
+  environment:
+    A_VARIABLE: ${env:A_VARIABLE}
+
+plugins:
+  - serverless-offline
+  - serverless-jest-plugin
+  - serverless-stack-output # Allows us to output endpoint url to json file
+
+functions:
+  hello:
+    handler: src/handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+          cors: true
+
+custom:
+  output:
+    handler: src/handler.hello
+    file: stack.json

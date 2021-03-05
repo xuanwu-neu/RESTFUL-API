@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type" : "object",
+    "required": ["id","name","body"],
+    "properties" : {
+        "id":{
+            "type" : "string"
+        },
+      "doc_name" : {
+        "type" : "string"
+      },
+      "body" : {
+        "type" : "string"
+      }
+    },
+    "title" : "Updated Document",
+    "description" : "Model containing document information"
+  }

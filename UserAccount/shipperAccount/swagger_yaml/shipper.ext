@@ -1,0 +1,177 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This API provides get, put, post, and delete request for ShipperAccount management",
+    "version" : "2020-07-22T00:48:00Z",
+    "title" : "dev-shipperAccount",
+    "termsOfService" : "http://swagger.io/terms/",
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "cz84k2p7di.execute-api.us-west-2.amazonaws.com",
+  "basePath" : "/dev",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/shippers" : {
+      "post" : {
+        "tags" : [ "shippers" ],
+        "summary" : "Upload new shipperAccount",
+        "description" : "Demonstrate a post method",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "shippApiGa6QQXETES9T6L",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/shippApiGa6QQXETES9T6L"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ReturnShipperAccount"
+            }
+          }
+        }
+      }
+    },
+    "/shippers/{id}" : {
+      "get" : {
+        "tags" : [ "shippers" ],
+        "summary" : "Gets the ShipperAccount based on the provided ID",
+        "description" : "Demonstrate a get method",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "shipper ID you want to access",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ReturnShipperAccount"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "shippers" ],
+        "summary" : "Update new shipperAccount",
+        "description" : "Demonstrate a put method",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "shipperAccount ID you want to access",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "shippApiGa12H8RHTG6QWZ6",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/shippApiGa12H8RHTG6QWZ6"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ReturnShipperAccount"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "shippers" ],
+        "summary" : "delete the shipperAccount based on the provided ID",
+        "description" : "Demonstrate a delete method",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "shipperAccount ID you want to access",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "ReturnShipperAccount" : {
+      "type" : "object",
+      "required" : [ "email", "firstname", "lastname", "phone" ],
+      "properties" : {
+        "firstname" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "lastname" : {
+          "type" : "string"
+        }
+      },
+      "title" : "output ShipperAccount",
+      "description" : "This is the model used show the response of requests"
+    },
+    "shippApiGa12H8RHTG6QWZ6" : {
+      "type" : "object",
+      "required" : [ "email", "firstname", "id", "lastname", "phone" ],
+      "properties" : {
+        "firstname" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "lastname" : {
+          "type" : "string"
+        }
+      },
+      "title" : "update ShipperAccount",
+      "description" : "Model containing shipper account information"
+    },
+    "shippApiGa6QQXETES9T6L" : {
+      "type" : "object",
+      "required" : [ "email", "firstname", "lastname", "phone" ],
+      "properties" : {
+        "firstname" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "lastname" : {
+          "type" : "string"
+        }
+      },
+      "title" : "create ShipperAccount",
+      "description" : "Model containing Shipper account information"
+    }
+  }
+}

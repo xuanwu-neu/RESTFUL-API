@@ -1,0 +1,219 @@
+service: document
+
+plugins:
+  - serverless-aws-documentation 
+  - serverless-dynamodb-local 
+  - serverless-s3-local
+  - serverless-offline
+
+
+custom:
+  settings:
+    ddb_table: "Document"
+    bucket: "documents-service-storage"
+  dynamodb:
+      stages:
+          - dev
+      start:
+          port: 4570
+          inMemory: true
+          migrate: true
+      migration:
+          dir: offline/migrations
+  s3: 
+    host: localhost 
+    port: 4569
+    directory: ./s3local
+
+  documentation:
+    api:
+      info:
+        verison: "1.0.0"
+        title: "Documents Service"
+        description: "This API provides get, put, post, and delete request for documents management"
+        termsOfService: http://swagger.io/terms/
+        contact:
+          email: samaraxiang@yahoo.com
+        license: 
+          name: Apache 2.0
+          url: http://www.apache.org/licenses/LICENSE-2.0.html
+        tags:
+          -
+            name: "documents"
+            description: "Documents Management System"
+        resources:
+          - 
+            path: "/documents"
+            description: "This is the path where client can upload new document"
+          -
+            path: "/documents/{id}"
+            description: "This is the path where client can interact with individual document sepcified by ID"
+    models:
+      - 
+        name: "NewDocument"
+        description: "This is the model used to upload new document"
+        contentType: "application/json"
+        schema: ${file(models/create_request.json)}
+      - 
+        name: "UpdatedDocument"
+        description: "This is the model used to update the existing document"
+        contentType: "application/json"
+        schema: ${file(models/put_request.json)}
+      - 
+        name: "ReturnDocument"
+        description: "This is the model used show the response of requests"
+        contentType: "application/json"
+        schema: ${file(models/output.json)}
+
+            
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  environment: ${self:custom.settings}
+  region: ${env:AWS_REGION}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - s3:GetObject
+        - s3:PutObject
+        - s3:DeleteObject
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.settings.ddb_table}"
+        - "arn:aws:s3:::${self:custom.settings.bucket}/*"
+
+
+functions:
+  getDocumentbyId:
+    handler: lambda/get.getDocumentbyId
+    events:
+      - http:
+          path: /documents/{id}
+          method: get
+          documentation:
+            summary: Gets the document based on the provided ID
+            tags:
+              - documents
+            description:
+              Demonstrate a get method
+            pathParams: 
+              - 
+                name: id 
+                description: Document ID you want to access
+                required: true
+            methodResponses:
+              -
+                statusCode: '200'
+                responseModels:
+                  "application/json": "ReturnDocument"
+
+          request:
+            parameters:
+              paths:
+                id: true
+
+  deleteDocumentbyId:
+    handler: lambda/delete.deleteDocumentbyId
+    events:
+      - http:
+          path: /documents/{id}
+          method: delete
+          documentation:
+            summary: delete the document based on the provided ID
+            tags:
+              - documents
+            description:
+              Demonstrate a delete method
+            pathParams: 
+              - 
+                name: id 
+                description: Document ID you want to access
+                required: true
+            methodResponses:
+              -
+                statusCode: '200'
+                
+          request:
+            parameters:
+              paths:
+                id: true
+  
+  putDocumentbyId:
+    handler: lambda/put.putDocumentbyId
+    events:
+      - http:
+          path: /documents/{id}
+          method: put
+          documentation:
+            summary: Update new document 
+            tags:
+              - documents
+            description:
+              Demonstrate a put method
+            pathParams: 
+              - 
+                name: id 
+                description: Document ID you want to access
+                required: true
+            requestBody:
+              "application/json": "UpdatedDocument"
+            methodResponses:
+              -
+                statusCode: '200'
+                responseModels:
+                  "application/json": "ReturnDocument"
+          request:
+            parameters:
+              paths:
+                id: true
+            schema:
+              application/json: ${file(models/put_request.json)}
+
+
+  postDocument:
+    handler: lambda/post.postDocument
+    events:
+      - http:
+          path: /documents/
+          method: post
+          documentation:
+            summary: Upload new document 
+            tags:
+              - documents
+            description:
+              Demonstrate a post method
+            requestBody:
+              "application/json": "NewDocument"
+            methodResponses:
+              -
+                statusCode: '200'
+                responseModels:
+                  "application/json": "ReturnDocument"
+          request: 
+            schema:
+             application/json: ${file(models/create_request.json)}
+
+
+resources:
+  Resources:
+    DDBTABLE:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "S"
+        KeySchema:
+        - AttributeName: "id"
+          KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.settings.ddb_table}
+  
+

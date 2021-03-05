@@ -1,0 +1,203 @@
+service: carrierAccount
+
+plugins:
+  - serverless-aws-documentation
+  - serverless-dynamodb-local
+  - serverless-offline
+  
+custom:
+  settings:
+    POSTS_TABLE: carrierAccount
+    
+  dynamodb:
+      stages:
+          - dev
+      start:
+          port: 4570
+          inMemory: true
+          migrate: true
+      migration:
+          dir: offline/migrations
+
+  documentation:
+    api:
+      info:
+        verison: "1.0.0"
+        title: "CarrierAccount Service"
+        description: "This API provides get, put, post, and delete request for CarrierAccount management"
+        termsOfService: http://swagger.io/terms/
+        license: 
+          name: Apache 2.0
+          url: http://www.apache.org/licenses/LICENSE-2.0.html
+        tags:
+          -
+            name: "CarrierAccount"
+            description: "CarrierAccount Management System"
+        resources:
+          - 
+            path: "/carriers"
+            description: "This is the path where client can create new carrierAccount"
+          -
+            path: "/carriers/{id}"
+            description: "This is the path where client can interact with individual carrierAccount sepcified by ID"
+    models:
+      - 
+        name: "NewCarrierAccount"
+        description: "This is the model used to upload new CarrierAccount"
+        contentType: "application/json"
+        schema: ${file(models/create_request.json)}
+      - 
+        name: "UpdatedCarrierAccount"
+        description: "This is the model used to update the existing CarrierAccount"
+        contentType: "application/json"
+        schema: ${file(models/put_request.json)}
+      - 
+        name: "ReturnCarrierAccount"
+        description: "This is the model used show the response of requests"
+        contentType: "application/json"
+        schema: ${file(models/output.json)}
+
+    
+provider:
+  name: aws
+  runtime: nodejs12.x
+  environment: ${self:custom.settings}
+  region: us-west-2
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.settings.POSTS_TABLE}"
+
+functions:
+  getCarrierbyId:
+    handler: lambda/get.getCarrierbyId
+    events:
+      - http:
+          path: /carriers/{id}
+          method: get
+          documentation:
+            summary: Gets the carrierAccount based on the provided ID
+            tags:
+              - carriers
+            description:
+              Demonstrate a get method
+            pathParams: 
+              - 
+                name: id 
+                description: carrier ID you want to access
+                required: true
+            methodResponses:
+              -
+                statusCode: '200'
+                responseModels:
+                  "application/json": "ReturnCarrierAccount"
+
+          request:
+            parameters:
+              paths:
+                id: true
+
+  deleteCarrierbyId:
+    handler: lambda/delete.deleteCarrierbyId
+    events:
+      - http:
+          path: /carriers/{id}
+          method: delete
+          documentation:
+            summary: delete the carrierAccount based on the provided ID
+            tags:
+              - carriers
+            description:
+              Demonstrate a delete method
+            pathParams: 
+              - 
+                name: id 
+                description: carrierAccount ID you want to access
+                required: true
+            methodResponses:
+              -
+                statusCode: '200'
+                
+          request:
+            parameters:
+              paths:
+                id: true
+  
+  putCarrierbyId:
+    handler: lambda/put.putCarrierbyId
+    events:
+      - http:
+          path: /carriers/{id}
+          method: put
+          documentation:
+            summary: Update new carrierAccount 
+            tags:
+              - carriers
+            description:
+              Demonstrate a put method
+            pathParams: 
+              - 
+                name: id 
+                description: carrierAccount ID you want to access
+                required: true
+            requestBody:
+              "application/json": "UpdatedCarrierAccount"
+            methodResponses:
+              -
+                statusCode: '200'
+                responseModels:
+                  "application/json": "ReturnCarrierAccount"
+          request:
+            parameters:
+              paths:
+                id: true
+            schema:
+              application/json: ${file(models/put_request.json)}
+
+  postCarrier:
+    handler: post.postCarrier
+    events:
+      - http:
+          path: /carriers/
+          method: post
+          documentation:
+            summary: Upload new carrierAccount 
+            tags:
+              - carriers
+            description:
+              Demonstrate a post method
+            requestBody:
+              "application/json": "NewCarrierAccount"
+            methodResponses:
+              -
+                statusCode: '200'
+                responseModels:
+                  "application/json": "ReturnCarrierAccount"
+          request: 
+            schema:
+             application/json: ${file(models/create_request.json)}
+
+
+
+resources:
+  Resources:
+    PostsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "S"
+        KeySchema:
+        - AttributeName: "id"
+          KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.settings.POSTS_TABLE}

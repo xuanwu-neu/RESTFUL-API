@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type" : "object",
+  "required": ["firstname","lastname","phone","email","US_DOT","trailer"],
+  "properties" : {
+    "firstname" : {
+      "type" : "string"
+    },
+    "lastname" : {
+      "type" : "string"
+    },
+    "phone" : {
+      "type" : "string"
+    },
+    "email" : {
+      "type" : "string"
+    },
+    "US_DOT" : {
+      "type" : "string"
+    },
+    "trailer" : {
+      "type" : "string"
+    }
+  },
+  "title" : "create CarrierAccount",
+  "description" : "Model containing carrier account information"
+}

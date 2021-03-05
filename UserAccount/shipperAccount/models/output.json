@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type" : "object",
+  "required": ["firstname","lastname","phone","email"],
+  "properties" : {
+    "firstname" : {
+      "type" : "string"
+    },
+    "lastname" : {
+      "type" : "string"
+    },
+    "phone" : {
+      "type" : "string"
+    },
+    "email" : {
+      "type" : "string"
+    }
+  },
+  "title" : "output ShipperAccount",
+  "description" : "Model containing Shipper account information"
+}

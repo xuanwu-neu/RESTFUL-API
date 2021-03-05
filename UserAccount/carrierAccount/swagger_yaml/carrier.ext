@@ -1,0 +1,195 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This API provides get, put, post, and delete request for CarrierAccount management",
+    "version" : "2020-07-21T21:25:19Z",
+    "title" : "dev-carrierAccount",
+    "termsOfService" : "http://swagger.io/terms/",
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "a39sbtjfjd.execute-api.us-west-2.amazonaws.com",
+  "basePath" : "/dev",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/carriers" : {
+      "post" : {
+        "tags" : [ "carriers" ],
+        "summary" : "Upload new carrierAccount",
+        "description" : "Demonstrate a post method",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "carriApiGaV6IQUD0EBENV",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/carriApiGaV6IQUD0EBENV"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ReturnCarrierAccount"
+            }
+          }
+        }
+      }
+    },
+    "/carriers/{id}" : {
+      "get" : {
+        "tags" : [ "carriers" ],
+        "summary" : "Gets the carrierAccount based on the provided ID",
+        "description" : "Demonstrate a get method",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "carrier ID you want to access",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ReturnCarrierAccount"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "carriers" ],
+        "summary" : "Update new carrierAccount",
+        "description" : "Demonstrate a put method",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "carrierAccount ID you want to access",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "carriApiGa1KKZ4953PT5U7",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/carriApiGa1KKZ4953PT5U7"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ReturnCarrierAccount"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "carriers" ],
+        "summary" : "delete the carrierAccount based on the provided ID",
+        "description" : "Demonstrate a delete method",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "carrierAccount ID you want to access",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "carriApiGa1KKZ4953PT5U7" : {
+      "type" : "object",
+      "required" : [ "US_DOT", "email", "firstname", "id", "lastname", "phone", "trailer" ],
+      "properties" : {
+        "trailer" : {
+          "type" : "string"
+        },
+        "US_DOT" : {
+          "type" : "string"
+        },
+        "firstname" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "lastname" : {
+          "type" : "string"
+        }
+      },
+      "title" : "update CarrierAccount",
+      "description" : "Model containing carrier account information"
+    },
+    "ReturnCarrierAccount" : {
+      "type" : "object",
+      "required" : [ "US_DOT", "email", "firstname", "lastname", "phone", "trailer" ],
+      "properties" : {
+        "trailer" : {
+          "type" : "string"
+        },
+        "US_DOT" : {
+          "type" : "string"
+        },
+        "firstname" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "lastname" : {
+          "type" : "string"
+        }
+      },
+      "title" : "output CarrierAccount",
+      "description" : "This is the model used show the response of requests"
+    },
+    "carriApiGaV6IQUD0EBENV" : {
+      "type" : "object",
+      "required" : [ "US_DOT", "email", "firstname", "lastname", "phone", "trailer" ],
+      "properties" : {
+        "trailer" : {
+          "type" : "string"
+        },
+        "US_DOT" : {
+          "type" : "string"
+        },
+        "firstname" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "lastname" : {
+          "type" : "string"
+        }
+      },
+      "title" : "create CarrierAccount",
+      "description" : "Model containing carrier account information"
+    }
+  }
+}

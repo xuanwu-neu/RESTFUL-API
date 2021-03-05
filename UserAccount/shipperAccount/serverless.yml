@@ -1,0 +1,205 @@
+service: shipperAccount
+
+plugins:
+  - serverless-aws-documentation
+  - serverless-dynamodb-local
+  - serverless-offline
+  
+custom:
+  settings:
+    POSTS_TABLE: shipperAccount
+  
+  dynamodb:
+      stages:
+          - dev
+      start:
+          port: 4570
+          inMemory: true
+          migrate: true
+      migration:
+          dir: offline/migrations
+
+  documentation:
+    api:
+      info:
+        verison: "1.0.0"
+        title: "ShipperAccount Service"
+        description: "This API provides get, put, post, and delete request for ShipperAccount management"
+        termsOfService: http://swagger.io/terms/
+        license: 
+          name: Apache 2.0
+          url: http://www.apache.org/licenses/LICENSE-2.0.html
+        tags:
+          -
+            name: "ShipperAccount"
+            description: "ShipperAccount Management System"
+        resources:
+          - 
+            path: "/shippers"
+            description: "This is the path where client can create new shipperAccount"
+          -
+            path: "/carriers/{id}"
+            description: "This is the path where client can interact with individual shipperAccount sepcified by ID"
+    models:
+      - 
+        name: "NewShipperAccount"
+        description: "This is the model used to upload new ShipperAccount"
+        contentType: "application/json"
+        schema: ${file(models/create_request.json)}
+      - 
+        name: "UpdatedShipperAccount"
+        description: "This is the model used to update the existing ShipperAccount"
+        contentType: "application/json"
+        schema: ${file(models/put_request.json)}
+      - 
+        name: "ReturnShipperAccount"
+        description: "This is the model used show the response of requests"
+        contentType: "application/json"
+        schema: ${file(models/output.json)}
+
+    
+provider:
+  name: aws
+  runtime: nodejs12.x
+  environment: ${self:custom.settings}
+  region: us-west-2
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.settings.POSTS_TABLE}"
+
+functions:
+  getShipperbyId:
+    handler: lambda/get.getShipperbyId
+    events:
+      - http:
+          path: /shippers/{id}
+          method: get
+          documentation:
+            summary: Gets the ShipperAccount based on the provided ID
+            tags:
+              - shippers
+            description:
+              Demonstrate a get method
+            pathParams: 
+              - 
+                name: id 
+                description: shipper ID you want to access
+                required: true
+            methodResponses:
+              -
+                statusCode: '200'
+                responseModels:
+                  "application/json": "ReturnShipperAccount"
+
+          request:
+            parameters:
+              paths:
+                id: true
+
+  deleteShipperbyId:
+    handler: lambda/delete.deleteShipperbyId
+    events:
+      - http:
+          path: /shippers/{id}
+          method: delete
+          documentation:
+            summary: delete the shipperAccount based on the provided ID
+            tags:
+              - shippers
+            description:
+              Demonstrate a delete method
+            pathParams: 
+              - 
+                name: id 
+                description: shipperAccount ID you want to access
+                required: true
+            methodResponses:
+              -
+                statusCode: '200'
+                
+          request:
+            parameters:
+              paths:
+                id: true
+  
+  putShipperbyId:
+    handler: lambda/put.putShipperbyId
+    events:
+      - http:
+          path: /shippers/{id}
+          method: put
+          documentation:
+            summary: Update new shipperAccount 
+            tags:
+              - shippers
+            description:
+              Demonstrate a put method
+            pathParams: 
+              - 
+                name: id 
+                description: shipperAccount ID you want to access
+                required: true
+            requestBody:
+              "application/json": "UpdatedShipperAccount"
+            methodResponses:
+              -
+                statusCode: '200'
+                responseModels:
+                  "application/json": "ReturnShipperAccount"
+          request:
+            parameters:
+              paths:
+                id: true
+            schema:
+              application/json: ${file(models/put_request.json)}
+
+
+
+  postShipper:
+    handler: post.postShipper
+    events:
+      - http:
+          path: /shippers/
+          method: post
+          documentation:
+            summary: Upload new shipperAccount 
+            tags:
+              - shippers
+            description:
+              Demonstrate a post method
+            requestBody:
+              "application/json": "NewShipperAccount"
+            methodResponses:
+              -
+                statusCode: '200'
+                responseModels:
+                  "application/json": "ReturnShipperAccount"
+          request: 
+            schema:
+             application/json: ${file(models/create_request.json)}
+
+
+
+resources:
+  Resources:
+    PostsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "S"
+        KeySchema:
+        - AttributeName: "id"
+          KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.settings.POSTS_TABLE}

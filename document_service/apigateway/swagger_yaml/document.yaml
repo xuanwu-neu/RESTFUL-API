@@ -1,0 +1,138 @@
+---
+swagger: "2.0"
+info:
+  description: "This API provides get, put, post, and delete request for documents\
+    \ management"
+  version: "2020-07-17T14:38:21Z"
+  title: "dev-document"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "samaraxiang@yahoo.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "5ga44awkj9.execute-api.us-east-2.amazonaws.com"
+basePath: "/dev"
+schemes:
+- "https"
+paths:
+  /documents:
+    post:
+      tags:
+      - "documents"
+      summary: "Upload new document"
+      description: "Demonstrate a post method"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "documApiGaF407TIT14NBQ"
+        required: true
+        schema:
+          $ref: "#/definitions/documApiGaF407TIT14NBQ"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/ReturnDocument"
+  /documents/{id}:
+    get:
+      tags:
+      - "documents"
+      summary: "Gets the document based on the provided ID"
+      description: "Demonstrate a get method"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Document ID you want to access"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/ReturnDocument"
+    put:
+      tags:
+      - "documents"
+      summary: "Update new document"
+      description: "Demonstrate a put method"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Document ID you want to access"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "documApiGaEEU6DCE8RBAT"
+        required: true
+        schema:
+          $ref: "#/definitions/documApiGaEEU6DCE8RBAT"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/ReturnDocument"
+    delete:
+      tags:
+      - "documents"
+      summary: "delete the document based on the provided ID"
+      description: "Demonstrate a delete method"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Document ID you want to access"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "200 response"
+        202:
+          description: "202 response"
+definitions:
+  documApiGaF407TIT14NBQ:
+    type: "object"
+    required:
+    - "body"
+    - "doc_name"
+    properties:
+      doc_name:
+        type: "string"
+      body:
+        type: "string"
+    title: "New Document"
+    description: "Model containing document information"
+  documApiGaEEU6DCE8RBAT:
+    type: "object"
+    required:
+    - "body"
+    - "doc_name"
+    - "id"
+    properties:
+      doc_name:
+        type: "string"
+      id:
+        type: "string"
+      body:
+        type: "string"
+    title: "Updated Document"
+    description: "Model containing document information"
+  ReturnDocument:
+    type: "object"
+    required:
+    - "body"
+    properties:
+      id:
+        type: "string"
+      body:
+        type: "string"
+    title: "Output Document"
+    description: "This is the model used show the response of requests"
